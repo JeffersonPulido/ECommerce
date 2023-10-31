@@ -41,7 +41,7 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
         role = 'Cliente'
     }
 
-    const formatDate = moment(createdAt).format('MMMM Do YYYY, h:mm:ss a');
+    const formatDate = moment(createdAt).format('DD / MMM / YYYY, h:mm:ss a');
 
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
         defaultValues: { name, email, createdAt, role }

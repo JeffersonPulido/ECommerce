@@ -4,6 +4,7 @@ import { Order, Product } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
+import { isValidObjectId } from "mongoose";
 
 type Data = { message: string } | IOrder;
 
@@ -14,8 +15,8 @@ export default function handler(
     switch (req.method) {
         case "POST":
             return createOrder(req, res);
-            break;
-
+        case "PUT":
+            return deleteOrders(req, res);
         default:
             return res.status(400).json({ message: "Bad Request" });
     }
@@ -84,3 +85,34 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             .json({ message: error.message || "Revise Logs del servidor" });
     }
 };
+
+const deleteOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+    const { orderId = "" } = req.body;
+    
+    if (!isValidObjectId(orderId)) {
+        res.status(400).json({ message: "No existe una orden con ese ID en la base de datos" });
+    }
+
+    const order = await Order.findOne({ _id: { $in: orderId } });
+    const productsOrder = order?.orderItems
+
+    await db.connect()
+    //Sumar cantidad de cada producto de la orden a su respecivo stock
+    productsOrder!.map(async (orderItem) => {
+        const idProductOrder = orderItem._id
+        const productToPlus = await Product.findOne({ _id: { $in: idProductOrder } });
+        productToPlus!.inStock += orderItem.quantity
+        await productToPlus!.save()
+    })
+
+    await Order.deleteOne({ _id: { $in: orderId } });
+    await db.disconnect();
+
+    const responseData = {
+        message: 'Orden eliminada. Por favor, recarga la página.',
+        reload: true
+    };
+
+    res.status(200).json(responseData);
+
+}

@@ -6,9 +6,10 @@ import { AdminLayout } from '@/components/layouts'
 import { IOrder, IUser } from '@/interfaces'
 import { currency } from '@/utils';
 import { shopApi } from '@/api';
+import moment from 'moment';
 
 const onDeleteOrder = async (orderId: number) => {
-    const { status } =  await shopApi.put('/admin/orders/', { orderId })
+    const { status } =  await shopApi.put('/orders/', { orderId })
     if (status === 200) {
         window.location.reload()
     } else {
@@ -49,7 +50,7 @@ const columns: GridColDef[] = [
         renderCell: ({ row }: GridRenderCellParams) => {
             return row.isPaid
                 ? 'N/A'
-                : <Button color='error' onClick={ () => onDeleteOrder(row.id) }>Eliminar</Button>
+                : <Button className='circular-btn' color='error' onClick={ () => onDeleteOrder(row.id) }>Eliminar</Button>
         }
         , width: 100
     },
@@ -69,11 +70,11 @@ const OrdersPage = () => {
         total: currency.format(order.total),
         isPaid: order.isPaid,
         noProducts: order.numberOfItems,
-        createdAt: order.createdAt
+        createdAt: moment(order.createdAt).format('DD / MMM / YYYY, h:mm:ss a')
     }))
 
     return (
-        <AdminLayout title={'Ordenes'} subTitle={'Mantenimiento de ordenes'} icon={<ConfirmationNumberOutlined />}>
+        <AdminLayout title={'Gestor de ordenes'} subTitle={'Mantenimiento general de ordenes'} icon={<ConfirmationNumberOutlined />}>
             <Grid container className="fadeIn">
                 <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
                     <DataGrid

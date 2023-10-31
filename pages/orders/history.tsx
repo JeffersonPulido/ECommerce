@@ -1,22 +1,33 @@
 import { GetServerSideProps, NextPage } from "next"
 import NextLink from 'next/link'
 import { ShopLayout } from "@/components/layouts"
-import { Chip, Grid, Link, Typography } from "@mui/material"
+import { Button, Chip, Grid, Link, Typography } from "@mui/material"
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { DataGrid, GridColDef, GridValueGetterParams, GridRenderCellParams } from "@mui/x-data-grid"
 import { getSession } from "next-auth/react"
 import { dbOrders } from "@/database"
 import { IOrder } from "@/interfaces";
 import { currency } from "@/utils";
+import { shopApi } from "@/api";
+import moment from "moment";
+
+const onDeleteOrder = async (orderId: number) => {
+    const { status } =  await shopApi.put('/orders/', { orderId })
+    if (status === 200) {
+        window.location.reload()
+    } else {
+        return
+    }
+}
 
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 100 },
+    { field: 'id', headerName: 'Orden Id', width: 220 },
     { field: 'fullname', headerName: 'Nombre Completo', width: 200 },
     { field: 'createdAt', headerName: 'Creada en', width: 200 },
     { field: 'total', headerName: 'Total', width: 200 },
     {
         field: 'paid',
-        headerName: 'Pagada',
+        headerName: 'Estado',
         description: 'Muestra informacion si la orden fue pagada o no',
         width: 150,
         renderCell: (params: GridRenderCellParams) => {
@@ -39,7 +50,17 @@ const columns: GridColDef[] = [
                 </NextLink>
             )
         }
-    }
+    },
+    {
+        field: 'deleteOrder',
+        headerName: 'Acciones',
+        renderCell: ({ row }: GridRenderCellParams) => {
+            return row.isPaid
+                ? 'N/A'
+                : <Button className='circular-btn'  color='error' onClick={ () => onDeleteOrder(row.id) }>Eliminar</Button>
+        }
+        , width: 100
+    },
 ]
 
 interface Props {
@@ -49,10 +70,10 @@ interface Props {
 const HistoryPage: NextPage<Props> = ({ orders }) => {
 
     const rows = orders.map((order, idx) => ({
-        id: idx + 1,
+        id: order._id,
         paid: order.isPaid,
         fullname: `${order.shippingAddress.name} ${order.shippingAddress.lastName}`,
-        createdAt: order.createdAt,
+        createdAt: moment(order.createdAt).format('DD / MMM / YYYY, h:mm:ss a'),
         total:  currency.format(order.total),
         orderId: order._id
     }))
