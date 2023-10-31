@@ -42,7 +42,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
               {
                 (product.inStock === 0) && (
                   <Chip
-                    color="primary"
+                    color="warning"
                     label="Sin Inventario"
                     sx={{ position: 'absolute', zIndex: 99, top: '10px', left: '10px' }}
                   />

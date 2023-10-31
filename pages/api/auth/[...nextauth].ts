@@ -1,4 +1,4 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -10,7 +10,7 @@ declare module "next-auth" {
     }
 }
 
-export const authOptions: NextAuthOptions = {
+export default NextAuth({
     providers: [
         CredentialsProvider({
             name: "Custom Login",
@@ -92,6 +92,4 @@ export const authOptions: NextAuthOptions = {
             return session;
         },
     },
-};
-
-export default NextAuth(authOptions);
+})
