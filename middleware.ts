@@ -4,8 +4,7 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
     const session:any = await getToken({
-        req,
-        secret: process.env.NEXTAUTH_SECRET,
+        req
     });
     const requestedPage = req.nextUrl.pathname;
     const validRoles = ["admin", "super-user", "SEO"];
