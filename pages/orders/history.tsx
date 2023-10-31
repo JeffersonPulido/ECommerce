@@ -55,7 +55,7 @@ const columns: GridColDef[] = [
         field: 'deleteOrder',
         headerName: 'Acciones',
         renderCell: ({ row }: GridRenderCellParams) => {
-            return row.isPaid
+            return row.paid
                 ? 'N/A'
                 : <Button className='circular-btn'  color='error' onClick={ () => onDeleteOrder(row.id) }>Eliminar</Button>
         }
