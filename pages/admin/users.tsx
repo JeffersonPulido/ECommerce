@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import shopApi from '@/api/shopApi';
+import shopApi from '@/axiosApi/shopApi';
 import { DataGrid, GridColDef, GridValueGetterParams, GridRenderCellParams } from "@mui/x-data-grid"
 import useSWR from 'swr';
 import { IUser } from '@/interfaces';

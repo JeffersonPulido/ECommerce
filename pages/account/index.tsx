@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { CheckOutlined, ErrorOutline, TimerOutlined, UpdateRounded, WarningAmberOutlined } from '@mui/icons-material'
 import { validations } from '@/utils'
 import moment from 'moment'
-import { shopApi } from '@/api'
+import { shopApi } from '@/axiosApi'
 
 interface FormData {
     _id?: string;

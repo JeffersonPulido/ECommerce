@@ -24,7 +24,7 @@ import {
 import { getSession } from "next-auth/react";
 import { dbOrders } from "@/database";
 import { IOrder } from "@/interfaces";
-import shopApi from "@/api/shopApi";
+import shopApi from "@/axiosApi/shopApi";
 
 interface Props {
     order: IOrder

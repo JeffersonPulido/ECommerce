@@ -5,7 +5,7 @@ import useSWR from 'swr'
 import { AdminLayout } from '@/components/layouts'
 import { IOrder, IUser } from '@/interfaces'
 import { currency } from '@/utils';
-import { shopApi } from '@/api';
+import { shopApi } from '@/axiosApi';
 import moment from 'moment';
 
 const onDeleteOrder = async (orderId: number) => {

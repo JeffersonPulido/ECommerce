@@ -7,7 +7,7 @@ import { Box, Button, capitalize, Card, CardActions, CardMedia, Checkbox, Chip, 
 import { IProduct } from '@/interfaces';
 import { AdminLayout } from '@/components/layouts';
 import { dbProducts } from '@/database';
-import { shopApi } from '@/api';
+import { shopApi } from '@/axiosApi';
 import { Product } from '@/models';
 
 const validTypes = ['shirts', 'pants', 'hoodies', 'hats']

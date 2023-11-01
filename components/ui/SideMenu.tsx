@@ -3,7 +3,7 @@ import { AuthContext, UiContext } from "@/context"
 import { useRouter } from "next/router"
 import { Box, Button, Divider, Drawer, IconButton, Input, InputAdornment, Link, List, ListItem, ListItemIcon, ListItemText, ListSubheader, Typography } from "@mui/material"
 import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, DashboardOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, OutboxOutlined, SearchOutlined, VpnKeyOutlined } from "@mui/icons-material"
-import { shopApi } from "@/api"
+import { shopApi } from "@/axiosApi"
 
 
 export const SideMenu = () => {

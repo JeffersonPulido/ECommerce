@@ -8,7 +8,7 @@ import { getSession } from "next-auth/react"
 import { dbOrders } from "@/database"
 import { IOrder } from "@/interfaces";
 import { currency } from "@/utils";
-import { shopApi } from "@/api";
+import { shopApi } from "@/axiosApi";
 import moment from "moment";
 
 const onDeleteOrder = async (orderId: number) => {

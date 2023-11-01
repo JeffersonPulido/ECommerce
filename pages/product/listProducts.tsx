@@ -8,7 +8,7 @@ import { ShopLayout } from '@/components/layouts'
 import { IProduct } from '@/interfaces'
 import { currency } from '@/utils';
 import { dbProducts } from '@/database';
-import { shopApi } from "@/api";
+import { shopApi } from "@/axiosApi";
 
 const onDeleteProduct = async (productId: number) => {
     const { status } =  await shopApi.put('/products/', { productId })

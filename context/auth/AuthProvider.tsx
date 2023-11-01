@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 
 import { AuthContext, authReducer } from './';
-import shopApi from '@/api/shopApi';
+import shopApi from '@/axiosApi/shopApi';
 import { IUser } from '@/interfaces';
 
 export interface AuthState {
