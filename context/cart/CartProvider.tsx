@@ -2,7 +2,7 @@ import { FC, useEffect, useReducer } from 'react'
 import Cookie from 'js-cookie'
 import { CartContext, cartReducer } from './'
 import { ICartProduct, IOrder, ShippingAddress } from '@/interfaces';
-import { shopApi } from '@/axiosApi';
+import shopApi from '@/axiosApi/shopApi';
 import axios from 'axios';
 
 export interface CartState {
