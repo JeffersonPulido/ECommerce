@@ -1,5 +1,5 @@
-import NextAuth from "next-auth";
-import type { NextAuthOptions } from "next-auth";
+import NextAuth from 'next-auth'
+import type { NextAuthOptions } from 'next-auth'
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -94,5 +94,4 @@ export const authOptions: NextAuthOptions = {
         },
     },
 }
-
-export default NextAuth(authOptions)
+export default NextAuth(authOptions);

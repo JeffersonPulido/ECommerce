@@ -127,14 +127,14 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
                 setTimeout(() => {
                     setMessageUpdated('')
                     setIsSaving(true)
-                    router.replace(`/product/listProducts/`)
+                    router.replace(`/product/managment/listProducts/`)
                 }, 2500)
             } else {
                 setMessageUpdated('Producto creado correctamente')
                 setTimeout(() => {
                     setMessageUpdated('')
                     setIsSaving(true)
-                    router.replace(`/product/listProducts/`)
+                    router.replace(`/product/managment/listProducts/`)
                 }, 2500)
             }
 

@@ -3,11 +3,11 @@ import { GetServerSideProps, NextPage } from 'next'
 import { getSession } from 'next-auth/react'
 import { ShopLayout } from '@/components/layouts'
 import { dbUsers } from '@/database'
-import { Box, Button, Chip, Grid, TextField, Typography } from '@mui/material'
+import { Box, Button, Chip, Divider, FormControl, Grid, ListSubheader, MenuItem, TextField, Typography } from '@mui/material'
 import { IUser } from '@/interfaces'
 import { useForm } from 'react-hook-form'
 import { CheckOutlined, ErrorOutline, TimerOutlined, UpdateRounded, WarningAmberOutlined } from '@mui/icons-material'
-import { validations } from '@/utils'
+import { banks, validations } from '@/utils'
 import moment from 'moment'
 import { shopApi } from '@/axiosApi'
 
@@ -15,6 +15,9 @@ interface FormData {
     _id?: string;
     name: string;
     email: string;
+    bank?: string;
+    typeAccount?: string;
+    numberAccount?: number;
     password?: string;
     createdAt: string;
     role: string
@@ -30,21 +33,13 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
     const [changeConfirmed, setChangeConfirmed] = useState(false)
     const [messageAlert, setMessageAlert] = useState('')
     const [isError, setIsError] = useState(false)
-    const { _id, name, email, createdAt, password } = user
-    let { role } = user
 
-    if (role === 'vendor') {
-        role = 'Vendedor'
-    }
-
-    if (role === 'client') {
-        role = 'Cliente'
-    }
+    const { _id, name, email, createdAt, password, role, bank, typeAccount, numberAccount } = user
 
     const formatDate = moment(createdAt).format('DD / MMM / YYYY, h:mm:ss a');
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
-        defaultValues: { name, email, createdAt, role }
+    const { register, handleSubmit, formState: { errors }, getValues } = useForm<FormData>({
+        defaultValues: { name, email, createdAt, role, bank, typeAccount, numberAccount }
     })
 
     const onSubmit = async (form: FormData) => {
@@ -52,10 +47,10 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
         setChangeConfirmed(false)
         setIsError(false)
 
-        const { name, email, password } = form
+        const { name, email, password, bank, numberAccount, typeAccount } = form
 
         try {
-            await shopApi.put('/user/register', { name, email, password, _id })
+            await shopApi.put('/user/register', { name, email, password, bank, numberAccount, typeAccount, _id })
 
             setChangeConfirmed(true)
             setMessageAlert('El usuario fue actualizado correctamente!')
@@ -100,7 +95,7 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
                                     })}
                                     error={!!errors.name}
                                     helperText={errors.name?.message}
-                                    disabled={ password === '@' ? true : false }
+                                    disabled={password === '@' ? true : false}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -116,7 +111,7 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
                                     })}
                                     error={!!errors.email}
                                     helperText={errors.email?.message}
-                                    disabled={ password === '@' ? true : false }
+                                    disabled={password === '@' ? true : false}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -144,10 +139,75 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
                                     })}
                                     error={!!errors.password}
                                     helperText={errors.password?.message}
-                                    disabled={ password === '@' ? true : false }
+                                    disabled={password === '@' ? true : false}
                                 />
                             </Grid>
-
+                            {
+                                role === 'vendor' && (
+                                    <>
+                                        <Divider />
+                                        <ListSubheader sx={{ mb: -2 }}>Informacion Bancaria</ListSubheader>
+                                        <Grid item xs={12}>
+                                            <FormControl fullWidth>
+                                                <TextField
+                                                    select
+                                                    variant="filled"
+                                                    label="Tipo de cliente"
+                                                    {
+                                                    ...register('typeAccount', {
+                                                        required: 'Es requerido elegir un tipo de cliente',
+                                                    })}
+                                                    error={!!errors.typeAccount}
+                                                    helperText={errors.typeAccount?.message}
+                                                    defaultValue={getValues('typeAccount')}
+                                                >
+                                                    {
+                                                        banks.typeAccount.map(typeAccount => (
+                                                            <MenuItem key={typeAccount.id} value={typeAccount.name}>{typeAccount.name}</MenuItem>
+                                                        ))
+                                                    }
+                                                </TextField>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <FormControl fullWidth>
+                                                <TextField
+                                                    select
+                                                    variant="filled"
+                                                    label="Seleccione el Banco"
+                                                    {
+                                                    ...register('bank', {
+                                                        required: 'Es requerido seleccionar un banco',
+                                                    })}
+                                                    error={!!errors.bank}
+                                                    helperText={errors.bank?.message}
+                                                    defaultValue={getValues('bank')}
+                                                >
+                                                    {
+                                                        banks.banks.map(bank => (
+                                                            <MenuItem key={bank.id} value={bank.name}>{bank.name}</MenuItem>
+                                                        ))
+                                                    }
+                                                </TextField>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                label="Numero de cuenta"
+                                                type="text"
+                                                variant="filled"
+                                                fullWidth
+                                                {
+                                                ...register('numberAccount', {
+                                                    required: 'Este campo es requerido',
+                                                })}
+                                                error={!!errors.numberAccount}
+                                                helperText={errors.numberAccount?.message}
+                                            />
+                                        </Grid>
+                                    </>
+                                )
+                            }
                             <Grid item xs={12}>
                                 {
                                     changeConfirmed

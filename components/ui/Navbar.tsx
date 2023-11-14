@@ -1,5 +1,6 @@
 import { useContext, useState } from 'react';
 import NextLink from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/router';
 import { CartContext, UiContext } from '../../context';
 import { AppBar, Badge, Box, Button, IconButton, Input, InputAdornment, Link, Toolbar, Typography } from '@mui/material';
@@ -24,7 +25,13 @@ export const Navbar = () => {
             <Toolbar>
                 <NextLink href='/' passHref legacyBehavior>
                     <Link display='flex' alignItems='center'>
-                        <Typography variant='h6'>{process.env.NEXT_PUBLIC_APP_NAME}</Typography>
+                        <Image
+                            src="/LOGO.webp"
+                            width={30}
+                            height={30}
+                            alt="Picture of the author"
+                        />
+                        <Typography sx={{ml: 1}} variant='h6'>{process.env.NEXT_PUBLIC_APP_NAME}</Typography>
                     </Link>
                 </NextLink>
 

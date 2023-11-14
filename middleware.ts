@@ -53,5 +53,6 @@ export const config = {
         "/api/admin/dashboard",
         "/api/admin/orders",
         "/api/admin/users",
+        "/api/admin/payments",
     ],
 };

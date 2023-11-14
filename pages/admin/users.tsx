@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import shopApi from '@/axiosApi/shopApi';
-import { DataGrid, GridColDef, GridValueGetterParams, GridRenderCellParams } from "@mui/x-data-grid"
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid"
 import useSWR from 'swr';
 import { IUser } from '@/interfaces';
 import { Grid, MenuItem, Select } from '@mui/material'
 import { PeopleOutline } from '@mui/icons-material'
 import { AdminLayout } from '@/components/layouts'
+import { typeAccount } from '../../utils/banks';
 
 const UsersPage = () => {
 
@@ -38,9 +39,12 @@ const UsersPage = () => {
     }
 
     const columns: GridColDef[] = [
-        { field: 'id', headerName: 'ID', width: 350 },
-        { field: 'email', headerName: 'Email', width: 350 },
-        { field: 'name', headerName: 'Nombre Completo', width: 350 },
+        { field: 'id', headerName: 'ID', width: 210 },
+        { field: 'email', headerName: 'Email', width: 250 },
+        { field: 'name', headerName: 'Nombre Completo', width: 210 },
+        { field: 'bank', headerName: 'Banco', width: 150 },
+        { field: 'typeAccount', headerName: 'Tipo Cliente', width: 100 },
+        { field: 'numberAccount', headerName: 'Numero Cuenta', width: 200 },
         {
             field: 'role',
             headerName: 'Rol',
@@ -68,6 +72,9 @@ const UsersPage = () => {
         id: user._id,
         email: user.email,
         name: user.name,
+        bank: user.bank,
+        typeAccount: user.typeAccount,
+        numberAccount: user.numberAccount,
         role: user.role
     }))
 

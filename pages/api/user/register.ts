@@ -12,6 +12,9 @@ type Data =
               email: string;
               name: string;
               role: string;
+              bank?: string;
+              numberAccount?: number;
+              typeAccount?: string;
           };
       };
 
@@ -99,11 +102,17 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         email = "",
         password = "",
         name = "",
+        bank = "",
+        numberAccount = 0,
+        typeAccount = "",
         _id,
     } = req.body as {
         email: string;
         password: string;
         name: string;
+        bank?: string;
+        numberAccount?: number;
+        typeAccount?: string;
         _id: string;
     };
 
@@ -134,6 +143,15 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             .json({ message: "El usuario no fue encontrado" });
     }
 
+    if(bank || typeAccount || numberAccount){
+        (user.email = email.toLowerCase()),
+        (user.password = bcrypt.hashSync(password)),
+        (user.name = name);
+        (user.bank = bank);
+        (user.typeAccount = typeAccount);
+        (user.numberAccount = numberAccount);
+    }
+    
     (user.email = email.toLowerCase()),
     (user.password = bcrypt.hashSync(password)),
     (user.name = name);

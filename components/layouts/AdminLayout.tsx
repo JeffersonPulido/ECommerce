@@ -49,19 +49,7 @@ export const AdminLayout: FC<Props> = ({
                     {children}
                 </Box>
             </main>
-            <footer
-                suppressHydrationWarning={true}
-                style={{
-                    position: 'fixed',
-                    bottom: '0px',
-                    width: '100%',
-                    backgroundColor: '#E5E7E9',
-                    minHeight: '20px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-            >
+            <footer>
                 <Footer />
             </footer>
         </>

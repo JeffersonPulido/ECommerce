@@ -115,7 +115,7 @@ const AddressPage = () => {
           {/* Nombre */}
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Nombre"
+              label="Nombre *"
               variant="filled"
               fullWidth
               {
@@ -130,7 +130,7 @@ const AddressPage = () => {
           {/* Apellido */}
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Apellido"
+              label="Apellido *"
               variant="filled"
               fullWidth
               {
@@ -148,7 +148,7 @@ const AddressPage = () => {
               <TextField
                 select
                 variant="filled"
-                label="Departamento"
+                label="Departamento *"
                 defaultValue={Cookies.get('department')}
                 {
                 ...register('department', {
@@ -172,7 +172,7 @@ const AddressPage = () => {
               <TextField
                 select
                 variant="filled"
-                label="Municipio"
+                label="Municipio *"
                 disabled={!departmentSelect ? true : false}
                 defaultValue={Cookies.get('city')}
                 {
@@ -193,7 +193,7 @@ const AddressPage = () => {
           {/* Direccion */}
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Dirección"
+              label="Dirección *"
               variant="filled"
               fullWidth
               {
@@ -207,7 +207,7 @@ const AddressPage = () => {
           {/* Barrio */}
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Barrio / Conjunto"
+              label="Barrio / Conjunto *"
               variant="filled"
               fullWidth
               {
@@ -230,7 +230,7 @@ const AddressPage = () => {
           {/* Telefono */}
           <Grid item xs={12} sm={6}>
             <TextField
-              label="Teléfono"
+              label="Teléfono *"
               variant="filled"
               type="number"
               fullWidth

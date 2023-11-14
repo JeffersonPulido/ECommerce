@@ -1,6 +1,6 @@
 import { db } from "@/database";
 import { IOrder } from "@/interfaces";
-import { Order, Product } from "@/models";
+import { MonthlyPayments, Order, Product } from "@/models";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
@@ -64,6 +64,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         });
 
         newOrder.total = Math.round( newOrder.total * 100 ) / 100
+
         //Restar unidades de la orden al stock de cada producto
         orderItems.map(async (orderItem) => {
             const idProductOrder = orderItem._id
@@ -72,6 +73,21 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             productToRest!.inStock -= orderItem.quantity
 
             productToRest!.save()
+        })
+
+        //Añadir info a coleccion Payments
+        orderItems.map( async (item) => {
+            const newPayment = new MonthlyPayments({
+                status: false,
+                itemId: item._id,
+                item: item.title,
+                orderId: newOrder._id,
+                quantityBuy: item.quantity,
+                total: (item.price * item.quantity),
+                comission: ((item.price * item.quantity) * Number(process.env.NEXT_PUBLIC_COMMISSION)),
+            })
+
+            await newPayment.save()
         })
 
         await newOrder.save();
