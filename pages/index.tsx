@@ -14,7 +14,7 @@ const HomePage: NextPage = () => {
             <ShopLayout
                 title={"Home"}
                 pageDescription={
-                    `${process.env.NEXT_PUBLIC_APP_NAME}, la mejor alternativa para tus compras de zapatos!`
+                    `${process.env.NEXT_PUBLIC_APP_NAME}, la mejor alternativa para tus compras!`
                 }
             >
                 <Typography variant="h1" component="h1">

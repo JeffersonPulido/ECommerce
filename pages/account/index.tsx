@@ -222,7 +222,7 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
                                             </Grid>
                                         )
                                         : (
-                                            password === '@'
+                                            (password === '@' && role !== 'vendor')
                                                 ? (
                                                     <Grid item xs={12} display='flex' justifyContent='center'>
                                                         <Chip
@@ -234,17 +234,50 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
                                                     </Grid>
                                                 )
                                                 : (
-                                                    <Button
-                                                        color="secondary"
-                                                        className="circular-btn"
-                                                        size="large"
-                                                        fullWidth
-                                                        type="submit"
-                                                        startIcon={<UpdateRounded />}
-                                                        disabled={isSaving}
-                                                    >
-                                                        Actualizar
-                                                    </Button>
+                                                    <>
+                                                        {
+                                                            password === '@'
+                                                                ? (
+                                                                    <>
+                                                                        <Button
+                                                                            color="secondary"
+                                                                            className="circular-btn"
+                                                                            size="large"
+                                                                            fullWidth
+                                                                            type="submit"
+                                                                            startIcon={<UpdateRounded />}
+                                                                            disabled={isSaving}
+                                                                        >
+                                                                            Actualizar
+                                                                        </Button>
+                                                                        <Grid item xs={12} mt={2} display='flex' justifyContent='center'>
+                                                                            <Chip
+                                                                                label='Usuario externo a la aplicación'
+                                                                                color='warning'
+                                                                                variant='outlined'
+                                                                                icon={<WarningAmberOutlined />}
+                                                                            />
+                                                                        </Grid>
+                                                                    </>
+                                                                )
+                                                                : (
+                                                                    <>
+                                                                        <Button
+                                                                            color="secondary"
+                                                                            className="circular-btn"
+                                                                            size="large"
+                                                                            fullWidth
+                                                                            type="submit"
+                                                                            startIcon={<UpdateRounded />}
+                                                                            disabled={isSaving}
+                                                                        >
+                                                                            Actualizar
+                                                                        </Button>
+                                                                    </>
+                                                                )
+                                                        }
+
+                                                    </>
                                                 )
                                         )
                                 }
@@ -266,9 +299,9 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
 
                         </Grid>
                     </Box>
-                </form>
-            </Box>
-        </ShopLayout>
+                </form >
+            </Box >
+        </ShopLayout >
     )
 }
 
