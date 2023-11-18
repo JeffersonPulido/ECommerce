@@ -1,5 +1,6 @@
 import { db } from '@/database';
-import { Order, Product, User } from '@/models';
+import { DashboardSummaryResponse } from '@/interfaces';
+import { MonthlyPayments, Order, Product, User } from '@/models';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 type Data = {
@@ -13,12 +14,15 @@ type Data = {
     numberOfProducts: number;
     productsWithNoStock: number;
     productsWithLowStock: number;
-    totalMoneyOrdersUnPaid: number,
-    totalMoneyOrdersPaid: number,
-    totalMoneyOutIVA: number
+    totalMoneyOrdersUnPaid: number;
+    totalMoneyOrdersPaid: number;
+    totalMoneyOutIVA: number;
+    monthlyPaymentsPaid: number;
+    monthlyPaymentsUnPaid: number;
+    comissionsPaid: number;
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>){    
+export default async function handler(req: NextApiRequest, res: NextApiResponse<DashboardSummaryResponse>){    
     
     await db.connect()
       
@@ -34,7 +38,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         productsWithLowStock,
         totalMoneyOrdersUnPaid,
         totalMoneyOrdersPaid,
-        totalMoneyOutIVA
+        totalMoneyOutIVA,
+        monthlyPaymentsPaid,
+        monthlyPaymentsUnPaid,
+        comissionsPaid,
+        comissionsUnPaid,
+        monthlyPaymentsTotalPaid,
+        monthlyPaymentsTotalUnPaid,
     ] = await Promise.all([
         Order.count(),
         Order.find({isPaid: true}).count(),
@@ -85,6 +95,68 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
                 }
             }
         ]),
+        MonthlyPayments.find({status: true}).count(),
+        MonthlyPayments.find({status: false}).count(),
+        MonthlyPayments.aggregate([
+            {
+                $match: {
+                    status: true
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalComissionsPaid: {
+                        $sum: "$comission"
+                    }
+                }
+            }
+        ]),
+        MonthlyPayments.aggregate([
+            {
+                $match: {
+                    status: false
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalComissionsUnPaid: {
+                        $sum: "$comission"
+                    }
+                }
+            }
+        ]),
+        MonthlyPayments.aggregate([
+            {
+                $match: {
+                    status: true
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalPaidSell: {
+                        $sum: "$total"
+                    }
+                }
+            }
+        ]),
+        MonthlyPayments.aggregate([
+            {
+                $match: {
+                    status: false
+                }
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalUnpaidSell: {
+                        $sum: "$total"
+                    }
+                }
+            }
+        ]),
     ])
 
     await db.disconnect()
@@ -92,6 +164,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const totalUnPaidOrders = totalMoneyOrdersUnPaid.length > 0 ? totalMoneyOrdersUnPaid[0].totalUnPaid : 0;
     const totalMoneyAllOrders = totalMoneyOrdersPaid && totalMoneyOrdersPaid.length > 0 ? totalMoneyOrdersPaid[0].totalMoneyAllOrders : 0
     const totalMoneyOrdersOutIVA = totalMoneyOutIVA && totalMoneyOutIVA.length > 0 ? totalMoneyOutIVA[0].totalPaidOutIVA : 0
+    const comissionsTotalPaid = comissionsPaid.length > 0 ? comissionsPaid[0].totalComissionsPaid : 0
+    const comissionsTotalUnPaid = comissionsUnPaid.length > 0 ? comissionsUnPaid[0].totalComissionsUnPaid : 0
+    const moneyMonthlyPaymentsTotalPaid = monthlyPaymentsTotalPaid.length > 0 ? monthlyPaymentsTotalPaid[0].totalPaidSell : 0
+    const moneyMonthlyPaymentsTotalUnPaid = monthlyPaymentsTotalUnPaid.length > 0 ? monthlyPaymentsTotalUnPaid[0].totalUnpaidSell : 0
     
     res.status(200).json({
         numberOfOrders,
@@ -107,5 +183,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         totalMoneyOrdersPaid: totalMoneyAllOrders - totalUnPaidOrders,
         totalMoneyOutIVA: totalMoneyOrdersOutIVA,
         notPaidOrders: numberOfOrders - paidOrders,
+        monthlyPaymentsPaid,
+        monthlyPaymentsUnPaid,
+        comissionsPaid: comissionsTotalPaid,
+        comissionsUnPaid: comissionsTotalUnPaid,
+        monthlyPaymentsTotalPaid: moneyMonthlyPaymentsTotalPaid - comissionsTotalPaid,
+        monthlyPaymentsTotalUnPaid: moneyMonthlyPaymentsTotalUnPaid - comissionsTotalUnPaid,
     })
 }

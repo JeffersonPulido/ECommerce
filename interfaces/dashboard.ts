@@ -12,4 +12,10 @@ export interface DashboardSummaryResponse {
     totalMoneyOrdersUnPaid: number;
     totalMoneyOutIVA: number;
     notPaidOrders: number;
+    monthlyPaymentsPaid: number;
+    monthlyPaymentsUnPaid: number;
+    comissionsPaid: number;
+    comissionsUnPaid: number,
+    monthlyPaymentsTotalPaid: number,
+    monthlyPaymentsTotalUnPaid: number,
 }

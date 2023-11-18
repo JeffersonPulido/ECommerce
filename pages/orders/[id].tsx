@@ -39,7 +39,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
     const router = useRouter()
     const { shippingAddress, numberOfItems, subTotal, tax, total } = order
     const dataPaid = { numberOfItems, subTotal, tax, total }
-    
+
     const [notification, setNotification] = useState<NotificationType>({
         isOpen: false,
         type: null,
@@ -66,30 +66,30 @@ const OrderPage: NextPage<Props> = ({ order }) => {
     }
 
     useEffect(() => {
-      const urlParams = new URLSearchParams(window.location.search)
-      const status = urlParams.get('status')
-      if (status === 'approved') {
-        setNotification({
-            content: 'Pago aprobado',
-            isOpen: true,
-            type: 'approved'
-        });
-      }
-      else if (status === 'failure') {
-        setNotification({
-            content: 'Pago rechazado',
-            isOpen: true,
-            type: 'failure'
-        });
-      }
+        const urlParams = new URLSearchParams(window.location.search)
+        const status = urlParams.get('status')
+        if (status === 'approved') {
+            setNotification({
+                content: 'Pago aprobado',
+                isOpen: true,
+                type: 'approved'
+            });
+        }
+        else if (status === 'failure') {
+            setNotification({
+                content: 'Pago rechazado',
+                isOpen: true,
+                type: 'failure'
+            });
+        }
 
-      setTimeout(() => {
-        setNotification({
-            isOpen: false,
-            type: null,
-            content: ''
-        })
-      }, 5000)
+        setTimeout(() => {
+            setNotification({
+                isOpen: false,
+                type: null,
+                content: ''
+            })
+        }, 5000)
     }, [])
 
     return (
@@ -101,27 +101,30 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                 Orden: {order._id}
             </Typography>
             {/* Chip is paid false or true */}
-            {
-                order.isPaid
-                    ? (
-                        <Chip
-                            sx={{ my: 2 }}
-                            label="Orden Pagada"
-                            variant="outlined"
-                            color="success"
-                            icon={<CreditScoreOutlined />}
-                        />
-                    )
-                    : (
-                        <Chip
-                            sx={{ my: 2 }}
-                            label='Pendiente de pago'
-                            variant="outlined"
-                            color="error"
-                            icon={<CreditCardOffOutlined />}
-                        />
-                    )
-            }
+            <Box>
+                {
+                    order.isPaid
+                        ? (
+                            <Chip
+                                sx={{ my: 2 }}
+                                label="Orden Pagada"
+                                variant="outlined"
+                                color="success"
+                                icon={<CreditScoreOutlined />}
+                            />
+                        )
+                        : (
+                            <Chip
+                                sx={{ my: 2 }}
+                                label='Pendiente de pago'
+                                variant="outlined"
+                                color="error"
+                                icon={<CreditCardOffOutlined />}
+                            />
+                        )
+
+                }
+            </Box>
 
             <Grid container spacing={2} className="fadeIn">
                 <Grid item xs={12} sm={7}>
@@ -189,9 +192,9 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                                             sx={{ my: 2 }}
                                             variant="filled"
                                             className="fadeIn"
-                                            label={notification.type === 'approved' ? notification.content : notification.content }
+                                            label={notification.type === 'approved' ? notification.content : notification.content}
                                             color={notification.type === 'approved' ? 'success' : 'error'}
-                                            icon={notification.type === 'approved' ? <CheckBoxOutlined /> : <ErrorOutline/>}
+                                            icon={notification.type === 'approved' ? <CheckBoxOutlined /> : <ErrorOutline />}
                                         />
                                     )
                                 }

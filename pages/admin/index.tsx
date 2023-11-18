@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { SummaryTile } from '@/components/admin'
 import { AdminLayout } from '@/components/layouts'
-import { AccessTimeOutlined, AccountBalanceOutlined, AdminPanelSettingsOutlined, AssignmentInd, AttachMoneyOutlined, CancelPresentationOutlined, CategoryOutlined, CreditCardOffOutlined, DashboardOutlined, GroupOutlined, PendingActionsOutlined, ProductionQuantityLimitsOutlined, ReceiptLongOutlined, SavingsOutlined } from '@mui/icons-material'
-import { Grid, Typography } from '@mui/material'
+import { AccessAlarmOutlined, AccessTimeOutlined, AccountBalanceOutlined, AdminPanelSettingsOutlined, AssignmentInd, AttachMoneyOutlined, CancelPresentationOutlined, CategoryOutlined, CheckCircleOutline, CreditCardOffOutlined, DashboardOutlined, GroupOutlined, PaidOutlined, PendingActionsOutlined, ProductionQuantityLimitsOutlined, ReceiptLongOutlined, SavingsOutlined } from '@mui/icons-material'
+import { Box, Chip, Grid, Typography } from '@mui/material'
 import { DashboardSummaryResponse } from '@/interfaces';
 import { currency } from '@/utils';
 
@@ -23,7 +23,6 @@ const DashboardPage = () => {
         return () => clearInterval(interval)
     }, [])
 
-
     if (!error && !data) {
         return <></>
     }
@@ -32,7 +31,7 @@ const DashboardPage = () => {
         console.log(error)
         return <Typography>Error al cargar informacion</Typography>
     }
-    
+
     const {
         numberOfOrders,
         paidOrders,
@@ -47,14 +46,28 @@ const DashboardPage = () => {
         totalMoneyOrdersUnPaid,
         totalMoneyOutIVA,
         notPaidOrders,
+        monthlyPaymentsPaid,
+        monthlyPaymentsUnPaid,
+        comissionsPaid,
+        comissionsUnPaid,
+        monthlyPaymentsTotalPaid,
+        monthlyPaymentsTotalUnPaid
     } = data!
-    
+
     return (
         <AdminLayout
             title='Dashboard'
             subTitle='Estadisticas generales'
             icon={<DashboardOutlined />}
         >
+            <Box display='flex' justifyContent='flex-end' mb={2}>
+                <Chip
+                    label={`Actualizacion en: ${refreshIn} seg`}
+                    color='secondary'
+                    variant='outlined'
+                    icon={<AccessTimeOutlined />}
+                />
+            </Box>
             <Grid container spacing={2}>
                 <SummaryTile title={numberOfOrders} subTitle='Ordenes totales' urlPage='/admin/orders' icon={<ReceiptLongOutlined color='secondary' sx={{ fontSize: 50 }} />} />
                 <SummaryTile title={paidOrders} subTitle='Ordenes pagadas' urlPage='/admin/orders' icon={<AttachMoneyOutlined color='success' sx={{ fontSize: 50 }} />} />
@@ -72,7 +85,10 @@ const DashboardPage = () => {
                 <SummaryTile title={currency.format(totalMoneyOrdersPaid)} subTitle='Dinero ordenes pagadas + IVA' icon={<SavingsOutlined color='success' sx={{ fontSize: 50 }} />} />
                 <SummaryTile title={currency.format(totalMoneyOrdersUnPaid)} subTitle='Dinero ordenes sin pagar + IVA' icon={<CreditCardOffOutlined color='error' sx={{ fontSize: 50 }} />} />
 
-                <SummaryTile title={refreshIn} subTitle='Actualizacion en: ' icon={<AccessTimeOutlined color='secondary' sx={{ fontSize: 50 }} />} />
+                <SummaryTile title={currency.format(monthlyPaymentsTotalPaid)} subTitle={`Pagos a vendedores completados: ${monthlyPaymentsPaid}`} urlPage='/admin/payments' icon={<CheckCircleOutline color='success' sx={{ fontSize: 50 }} />} />
+                <SummaryTile title={currency.format(monthlyPaymentsTotalUnPaid)} subTitle={`Pagos a vendedores pendientes: ${monthlyPaymentsUnPaid}`} urlPage='/admin/payments' icon={<AccessAlarmOutlined color='warning' sx={{ fontSize: 50 }} />} />
+                <SummaryTile title={currency.format(comissionsPaid)} subTitle={`Comisiones recaudadas - Pendientes ${currency.format(comissionsUnPaid)}`} icon={<PaidOutlined color='success' sx={{ fontSize: 50 }} />} />
+
             </Grid>
         </AdminLayout>
     )

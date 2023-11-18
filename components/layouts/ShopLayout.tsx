@@ -36,6 +36,9 @@ export const ShopLayout: FC<Props> = ({
                     margin: "80px auto",
                     maxWidth: "1440px",
                     padding: "0px 30px",
+                    display: "flex",
+                    flexDirection: "column",
+                    minHeight: "80vh",
                 }}
             >
                 {children}

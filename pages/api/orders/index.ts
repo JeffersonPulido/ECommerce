@@ -6,6 +6,7 @@ import { db } from "@/database";
 import { IOrder } from "@/interfaces";
 import { MonthlyPayments, Order, Product, User } from "@/models";
 import nodemailer from "nodemailer";
+import { currency } from "@/utils";
 
 type Data = { message: string } | IOrder;
 
@@ -125,25 +126,44 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         const destination = session.user.email;
         const subject = `¡Tu pedido en ${process.env.NEXT_PUBLIC_APP_NAME} ha sido generado!`;
-        const contentMail = `
+        let contentMail = `
         ¡Hola, ${session.user.name}!
 
         ¡Gracias por realizar tu pedido en nuestra tienda online!
 
-        Si tienes dudas comunícate a nuestra línea de WhatsApp +57 3185532139 o al correo: info@inducascos.com
+        Si tienes dudas comunícate a nuestra línea de WhatsApp +57 3102156205 o al correo: info@bestmarkid.com
 
         Los detalles del pedido se encuentran abajo:
 
         INFORMACION DE ENTREGA:
-        ${shippingAddress.name} ${shippingAddress.lastName}
-        ${shippingAddress.address}, ${shippingAddress.neighborhood}
-        ${shippingAddress.city}, ${shippingAddress.department}
-        ${shippingAddress.phone}
-        ${shippingAddress.observation}
+
+            ${shippingAddress.name} ${shippingAddress.lastName}
+            ${shippingAddress.address}, ${shippingAddress.neighborhood}
+            ${shippingAddress.city}, ${shippingAddress.department}
+            ${shippingAddress.phone}
+            ${shippingAddress.observation}
 
         INFORMACION DEL PEDIDO:
-        ${orderItems.map((orderItem) => {orderItem})}
         `;
+        // Agregar detalles de los productos al cuerpo del correo
+        orderItems.forEach((producto, index) => {
+            contentMail += `
+            Producto ${index + 1}:
+            Título: ${producto.title}
+            Precio: ${currency.format( producto.price)}
+            Tamaño: ${producto.size}
+            Genero: ${producto.gender}
+            Cantidad: ${producto.quantity}
+            `;
+        });
+
+        contentMail += `
+        Gracias por tu compra. Si necesitas más información, no dudes en contactarnos.
+        
+        Atentamente,
+        El equipo de BestMarkID
+        `;
+
         sendMail(destination, subject, contentMail);
         await db.disconnect();
         return res.status(201).json(newOrder);
@@ -156,7 +176,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     }
 };
 
-const deleteOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const deleteOrders = async (req: NextApiRequest,res: NextApiResponse<Data>) => {
     const { orderId = "" } = req.body;
 
     if (!isValidObjectId(orderId)) {
@@ -179,6 +199,7 @@ const deleteOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
         await productToPlus!.save();
     });
 
+    await MonthlyPayments.deleteMany({ orderId: { $in: orderId } });
     await Order.deleteOne({ _id: { $in: orderId } });
     await db.disconnect();
 
