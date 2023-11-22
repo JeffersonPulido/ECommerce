@@ -136,7 +136,7 @@ export const Navbar = () => {
                     </Link>
                 </NextLink>
 
-                <Button onClick={toggleSideMenu}>
+                <Button onClick={toggleSideMenu} className='btn-menu'>
                     Menú
                 </Button>
 

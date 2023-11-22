@@ -3,10 +3,10 @@ import { GetServerSideProps } from 'next'
 import NextLink from "next/link";
 import { getSession, signIn, getProviders } from "next-auth/react";
 import { AuthLayout } from "@/components/layouts";
-import { Box, Button, Chip, Divider, Grid, Link, TextField, Typography } from "@mui/material";
+import { Box, Button, Chip, Divider, Grid, Link, TextField, Typography, IconButton } from '@mui/material';
 import { useForm } from "react-hook-form";
 import { validations } from "@/utils";
-import { ErrorOutline } from "@mui/icons-material";
+import { ErrorOutline, GitHub, Google } from "@mui/icons-material";
 import { useRouter } from "next/router";
 
 type FormData = {
@@ -116,8 +116,8 @@ const LoginPage = () => {
                             </NextLink>
                         </Grid>
                         {/* Proveedores next auth */}
-                        <Grid item xs={12} display="flex" flexDirection='column' justifyContent="end">
-                            <Divider sx={{ width: '100%', mb: 2 }} />
+                        <Divider sx={{ width: '100%', m: 2 }} />
+                        <Grid xs={12} display="flex" gap={2} justifyContent='center'>
                             {
                                 Object.values(providers).map((provider: any) => {
 
@@ -125,18 +125,39 @@ const LoginPage = () => {
                                         return (<div key='credentials'></div>)
                                     }
 
-                                    return (
-                                        <Button
-                                            key={provider.id}
-                                            variant="outlined"
-                                            fullWidth
-                                            color='primary'
-                                            sx={{ mb: 1 }}
-                                            onClick={() => signIn(provider.id)}
-                                        >
-                                            {provider.name}
-                                        </Button>
-                                    )
+                                    if (provider.name === 'Google') {
+                                        return (
+                                            <Button
+                                                key={provider.id}
+                                                color='primary'
+                                                variant="outlined"
+                                                onClick={() => signIn(provider.id)}
+                                                fullWidth
+                                                sx={{ p: 1 }}
+                                                className="btn-provider-auth"
+                                                startIcon={<Google/>}
+                                            >
+                                                {provider.name}
+                                            </Button>
+                                        )
+                                    }
+
+                                    if (provider.name === 'GitHub') {
+                                        return (
+                                            <Button
+                                                key={provider.id}
+                                                color='primary'
+                                                variant="outlined"
+                                                onClick={() => signIn(provider.id)}
+                                                fullWidth
+                                                sx={{ p: 1 }}
+                                                className="btn-provider-auth"
+                                                startIcon={<GitHub />}
+                                            >
+                                                {provider.name}
+                                            </Button>
+                                        )
+                                    }
                                 })
                             }
                         </Grid>

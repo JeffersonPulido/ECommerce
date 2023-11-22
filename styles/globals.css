@@ -9,6 +9,10 @@
   100% {opacity: 1;}
 }
 
+*{
+  font-family: 'Quicksand', sans-serif;
+}
+
 body{
   display: flex;
   flex-direction: column;
@@ -41,4 +45,22 @@ a{
 .summary-card {
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-provider-auth:hover {
+  background-color: #232323 !important;
+  color: #f3f3f3;
+  border-color: #f3f3f3;
+}
+
+.btn-menu{
+  background-color: #232323 !important;
+  color: #f3f3f3;
+  font-weight: 700;
+}
+
+.btn-menu:hover {
+  background-color: #f3f3f3 !important;
+  color: #232323;
+  border-color: #f3f3f3;
 }

@@ -10,7 +10,10 @@ import { currency } from "@/utils";
 
 type Data = { message: string } | IOrder;
 
-export default function handler(req: NextApiRequest,res: NextApiResponse<Data>) {
+export default function handler(
+    req: NextApiRequest,
+    res: NextApiResponse<Data>
+) {
     switch (req.method) {
         case "POST":
             return createOrder(req, res);
@@ -23,6 +26,38 @@ export default function handler(req: NextApiRequest,res: NextApiResponse<Data>) 
 
 const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const { orderItems, total, shippingAddress } = req.body as IOrder;
+
+    // Función para enviar el correo
+    const sendMail = async (
+        destination: string,
+        subject: string,
+        contentMail: string
+    ) => {
+        // Configurar el transporte
+        let transporter = nodemailer.createTransport({
+            service: "Gmail",
+            auth: {
+                user: process.env.MAIL_USER,
+                pass: process.env.MAIL_PASS,
+            },
+        });
+
+        // Detalles del correo
+        let mailOptions = {
+            from: process.env.MAIL_USER,
+            to: destination,
+            subject: subject,
+            text: contentMail,
+        };
+
+        // Enviar el correo
+        try {
+            let info = await transporter.sendMail(mailOptions);
+            console.log("Correo enviado:", info.response);
+        } catch (error) {
+            console.error("Error al enviar el correo:", error);
+        }
+    };
 
     //Verify session user
     const session: any = await getServerSession(req, res, authOptions);
@@ -94,39 +129,57 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             await newPayment.save();
         });
 
-        await newOrder.save();
+        // Send Mail Seller Notification
+        orderItems.forEach(async (item, index) => {
+            const itemId = item._id;
+            const dataProduct = await Product.findById(itemId).select("name");
+            const dataUser = await User.find({
+                _id: { $in: dataProduct?.name },
+            }).select("email name");
+            dataUser.map((user) => {
+                const destinationSeller = user.email;
+                const subjectSeller = `¡Te han comprado un producto en ${process.env.NEXT_PUBLIC_APP_NAME}!`;
+                let contentMailSeller = `
+                ¡Hola, ${user.name}!
+        
+                ¡Gracias por vender tus productos en nuestra tienda online!
+        
+                Si tienes dudas comunícate a nuestra línea de WhatsApp +57 3102156205 o al correo: info@bestmarkid.com
 
-        // Función para enviar el correo
-        const sendMail = async (destination: string,subject: string,contentMail: string) => {
-            // Configurar el transporte
-            let transporter = nodemailer.createTransport({
-                service: "Gmail",
-                auth: {
-                    user: process.env.MAIL_USER,
-                    pass: process.env.MAIL_PASS,
-                },
+                Por favor alista tu mercancia y llevala al centro de distribucion mas cercano e ingresa la guia en nuestra plataforma.
+        
+                Los detalles del pedido se encuentran abajo:
+        
+                INFORMACION DE ENTREGA:
+    
+                    ${shippingAddress.name} ${shippingAddress.lastName}
+                    ${shippingAddress.address}, ${shippingAddress.neighborhood}
+                    ${shippingAddress.city}, ${shippingAddress.department}
+                    ${shippingAddress.phone}
+                    Observaciones: ${shippingAddress.observation}
+    
+                INFORMACION DEL PEDIDO:
+
+                    Producto ${index + 1}:
+                    Título: ${item.title}
+                    Precio: ${currency.format(item.price)}
+                    Tamaño: ${item.size}
+                    Genero: ${item.gender}
+                    Cantidad: ${item.quantity}
+                
+                Gracias por tu venta. Si necesitas más información, no dudes en contactarnos.
+                
+                Atentamente,
+                El equipo de BestMarkid
+            `
+                sendMail(destinationSeller, subjectSeller, contentMailSeller);
             });
+        });
 
-            // Detalles del correo
-            let mailOptions = {
-                from: process.env.MAIL_USER,
-                to: destination,
-                subject: subject,
-                text: contentMail,
-            };
-
-            // Enviar el correo
-            try {
-                let info = await transporter.sendMail(mailOptions);
-                console.log("Correo enviado:", info.response);
-            } catch (error) {
-                console.error("Error al enviar el correo:", error);
-            }
-        };
-
-        const destination = session.user.email;
-        const subject = `¡Tu pedido en ${process.env.NEXT_PUBLIC_APP_NAME} ha sido generado!`;
-        let contentMail = `
+        // Send Mail Buyer Notification
+        const destinationBuyer = session.user.email;
+        const subjectBuyer = `¡Tu pedido en ${process.env.NEXT_PUBLIC_APP_NAME} ha sido generado!`;
+        let contentMailBuyer = `
         ¡Hola, ${session.user.name}!
 
         ¡Gracias por realizar tu pedido en nuestra tienda online!
@@ -141,30 +194,32 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             ${shippingAddress.address}, ${shippingAddress.neighborhood}
             ${shippingAddress.city}, ${shippingAddress.department}
             ${shippingAddress.phone}
-            ${shippingAddress.observation}
+            Observaciones: ${shippingAddress.observation}
 
         INFORMACION DEL PEDIDO:
         `;
         // Agregar detalles de los productos al cuerpo del correo
         orderItems.forEach((producto, index) => {
-            contentMail += `
+            contentMailBuyer += `
             Producto ${index + 1}:
             Título: ${producto.title}
-            Precio: ${currency.format( producto.price)}
+            Precio: ${currency.format(producto.price)}
             Tamaño: ${producto.size}
             Genero: ${producto.gender}
             Cantidad: ${producto.quantity}
             `;
         });
 
-        contentMail += `
+        contentMailBuyer += `
         Gracias por tu compra. Si necesitas más información, no dudes en contactarnos.
         
         Atentamente,
-        El equipo de BestMarkID
+        El equipo de BestMarkid
         `;
 
-        sendMail(destination, subject, contentMail);
+        sendMail(destinationBuyer, subjectBuyer, contentMailBuyer);
+        //Save Order
+        await newOrder.save();
         await db.disconnect();
         return res.status(201).json(newOrder);
     } catch (error: any) {
@@ -176,7 +231,10 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     }
 };
 
-const deleteOrders = async (req: NextApiRequest,res: NextApiResponse<Data>) => {
+const deleteOrders = async (
+    req: NextApiRequest,
+    res: NextApiResponse<Data>
+) => {
     const { orderId = "" } = req.body;
 
     if (!isValidObjectId(orderId)) {

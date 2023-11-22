@@ -36,7 +36,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Card variant='outlined'>
+      <Card variant='outlined' sx={{ border: '2px solid #ff5a23' }}>
         <NextLink href={`/product/${product.slug}`} passHref legacyBehavior prefetch={false}>
           <Link>
             <CardActionArea>
@@ -45,7 +45,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
                   <Chip
                     color="warning"
                     label="Sin Inventario"
-                    sx={{ position: 'absolute', zIndex: 99, top: '10px', left: '10px' }}
+                    sx={{ position: 'absolute', zIndex: 99, top: '10px', left: '10px', fontWeight: 700 }}
                   />
                 )
               }

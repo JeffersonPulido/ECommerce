@@ -13,6 +13,9 @@ export const lightTheme = createTheme({
     },
     info: {
       main: '#fff'
+    },
+    warning: {
+      main: '#ff5a23'
     }
   },
   components: {
@@ -36,17 +39,23 @@ export const lightTheme = createTheme({
 
     MuiTypography: {
       styleOverrides: {
+        root: {
+          fontFamily: 'Quicksand'
+        },
         h1: {
           fontSize: 30,
-          fontWeight: 600
+          fontWeight: 600,
+          fontFamily: 'Quicksand'
         },
         h2: {
           fontSize: 20,
-          fontWeight: 400
+          fontWeight: 400,
+          fontFamily: 'Quicksand'
         },
         subtitle1: {
           fontSize: 18,
-          fontWeight: 600
+          fontWeight: 600,
+          fontFamily: 'Quicksand'
         }
       }
     },
@@ -57,11 +66,13 @@ export const lightTheme = createTheme({
         variant: 'contained',
         size: 'small',
         disableElevation: true,
-        color: 'info'
+        color: 'info',
       },
       styleOverrides: {
         root: {
           textTransform: 'none',
+          fontFamily: 'Quicksand',
+          fontWeight: 600,
           boxShadow: 'none',
           borderRadius: 10,
           ":hover": {
@@ -81,6 +92,7 @@ export const lightTheme = createTheme({
         root: {
           boxShadow: '0px 5px 5px rgba(0,0,0,0.05)',
           borderRadius: '10px',
+          fontFamily: 'Quicksand'
         }
       }
     }
