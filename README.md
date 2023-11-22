@@ -2,12 +2,18 @@
 
 First, run the development server:
 
+## Technologies
+- NextJS
+- ReactJS
+- Typescript
+- MaterialUI
+- Cloudinary
+- Mercado Pago
+- MongoDB
+
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 ## Endpoints API
 
