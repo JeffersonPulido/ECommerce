@@ -18,7 +18,9 @@ export const ShopLayout: FC<Props> = ({
     return (
         <>
             <Head>
-                <title>{title} | {process.env.NEXT_PUBLIC_APP_NAME}</title>
+                <title>
+                    {title} | {process.env.NEXT_PUBLIC_APP_NAME}
+                </title>
                 <meta name="description" content={pageDescription} />
                 <meta name="og:title" content={title} />
                 <meta name="og:description" content={pageDescription} />
