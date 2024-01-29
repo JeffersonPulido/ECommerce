@@ -1,3 +1,10 @@
 export const SHOP_CONSTANTS = {
-    validGenders: ['men', 'women', 'kid', 'unisex']
-}
+    validCategories: [
+        "ropa",
+        "aseo",
+        "variedad",
+        "juguetes",
+        "mobiliario",
+        "accesorios",
+    ],
+};

@@ -7,6 +7,7 @@ export interface ICartProduct {
     size?: ISize;
     slug: string;
     title: string;
+    type: string;
     gender: 'men'|'women'|'kid'|'unisex';
     quantity: number;
 }

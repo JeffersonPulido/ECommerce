@@ -9,12 +9,19 @@ export interface IProduct {
     tags: string[];
     title: string;
     type: ITypes;
-    gender: 'men'|'women'|'kid'|'unisex'
+    gender: "men" | "women" | "kid" | "unisex";
+    status: "Nuevo" | "Casi Nuevo" | "Buen Estado" | "Usado"
     createdAt: string;
     updatedAt: string;
     name?: string;
-    quantitySeller?: number
+    quantitySeller?: number;
 }
 
-export type ISize = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'XXXL';
-export type ITypes = 'shirts'|'pants'|'hoodies'|'hats';
+export type ISize = "XS" | "S" | "M" | "L" | "XL" | "XXL" | "N/A";
+export type ITypes =
+    | "ropa"
+    | "aseo"
+    | "variedad"
+    | "juguetes"
+    | "mobiliario"
+    | "accesorios";

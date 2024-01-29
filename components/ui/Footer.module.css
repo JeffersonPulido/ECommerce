@@ -33,7 +33,7 @@
 .footer .footer-company-info .footer-icons {
     display: flex;
     align-items: center;
-    column-gap: .75rem;
+    column-gap: 2rem;
     color: #f8f9fc;
     cursor: pointer;
     border-radius: 50%;

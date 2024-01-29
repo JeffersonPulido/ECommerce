@@ -21,12 +21,14 @@ export default function handler(
 }
 
 const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-    const { gender = "all" } = req.query;
-
+    const { type = "all" } = req.query;
     let condition = {};
 
-    if (gender !== "all" && SHOP_CONSTANTS.validGenders.includes(`${gender}`)) {
-        condition = { gender };
+    if (
+        type !== "all" &&
+        SHOP_CONSTANTS.validCategories.includes(`${type}`)
+    ) {
+        condition = { type };
     }
 
     await db.connect();
@@ -35,38 +37,43 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         .lean();
     await db.disconnect();
 
+    const updatedProducts = products.map((product) => {
+        product.images = product.images.map((image) => {
+            return image.includes("http")
+                ? image
+                : `${process.env.HOST_NAME}products/${image}`;
+        });
 
-    const updatedProducts = products.map(product => {
-        product.images = product.images.map( image => {
-            return image.includes('http') ? image : `${process.env.HOST_NAME}products/${ image }`
-        })
-
-        return product
-    })
-
+        return product;
+    });
 
     return res.status(200).json(updatedProducts);
 };
 
-const deleteProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const deleteProduct = async (
+    req: NextApiRequest,
+    res: NextApiResponse<Data>
+) => {
     const { productId = "" } = req.body;
-    
+
     if (!isValidObjectId(productId)) {
-        res.status(400).json({ message: "No existe un producto con ese ID en la base de datos" });
+        res.status(400).json({
+            message: "No existe un producto con ese ID en la base de datos",
+        });
     }
 
-    await db.connect()
+    await db.connect();
 
     const product = await Product.findOne({ _id: { $in: productId } });
-    
+
     await product!.deleteOne({ _id: { $in: productId } });
-    
+
     await db.disconnect();
 
     const responseData = {
-        message: 'Producto eliminada. Por favor, recarga la página.',
-        reload: true
+        message: "Producto eliminada. Por favor, recarga la página.",
+        reload: true,
     };
 
     res.status(200).json(responseData);
-}
+};

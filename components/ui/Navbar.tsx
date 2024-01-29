@@ -64,7 +64,7 @@ export const Navbar = () => {
                             : { xs: "none", sm: "block" },
                     }}
                 >
-                    <NextLink href="/category/men" passHref legacyBehavior>
+                    <NextLink href="/category/clothes" passHref legacyBehavior>
                         <Link sx={{ margin: "2px" }}>
                             <Button
                                 sx={{
@@ -76,16 +76,16 @@ export const Navbar = () => {
                                     border: "1px solid white",
                                 }}
                                 color={
-                                    asPath === "/category/men"
+                                    asPath === "/category/clothes"
                                         ? "primary"
                                         : "info"
                                 }
                             >
-                                Hombres
+                                Ropa
                             </Button>
                         </Link>
                     </NextLink>
-                    <NextLink href="/category/women" passHref legacyBehavior>
+                    <NextLink href="/category/clean" passHref legacyBehavior>
                         <Link sx={{ margin: "2px" }}>
                             <Button
                                 sx={{
@@ -97,16 +97,16 @@ export const Navbar = () => {
                                     border: "1px solid white",
                                 }}
                                 color={
-                                    asPath === "/category/women"
+                                    asPath === "/category/clean"
                                         ? "primary"
                                         : "info"
                                 }
                             >
-                                Mujeres
+                                Aseo
                             </Button>
                         </Link>
                     </NextLink>
-                    <NextLink href="/category/kid" passHref legacyBehavior>
+                    <NextLink href="/category/toys" passHref legacyBehavior>
                         <Link sx={{ margin: "2px" }}>
                             <Button
                                 sx={{
@@ -118,12 +118,54 @@ export const Navbar = () => {
                                     border: "1px solid white",
                                 }}
                                 color={
-                                    asPath === "/category/kid"
+                                    asPath === "/category/toys"
                                         ? "primary"
                                         : "info"
                                 }
                             >
-                                Niños
+                                Juguetes
+                            </Button>
+                        </Link>
+                    </NextLink>
+                    <NextLink href="/category/furniture" passHref legacyBehavior>
+                        <Link sx={{ margin: "2px" }}>
+                            <Button
+                                sx={{
+                                    ":hover": {
+                                        bgcolor: "info",
+                                        color: "white",
+                                        border: "1px solid white",
+                                    },
+                                    border: "1px solid white",
+                                }}
+                                color={
+                                    asPath === "/category/furniture"
+                                        ? "primary"
+                                        : "info"
+                                }
+                            >
+                                Mobiliario
+                            </Button>
+                        </Link>
+                    </NextLink>
+                    <NextLink href="/category/variety" passHref legacyBehavior>
+                        <Link sx={{ margin: "2px" }}>
+                            <Button
+                                sx={{
+                                    ":hover": {
+                                        bgcolor: "info",
+                                        color: "white",
+                                        border: "1px solid white",
+                                    },
+                                    border: "1px solid white",
+                                }}
+                                color={
+                                    asPath === "/category/variety"
+                                        ? "primary"
+                                        : "info"
+                                }
+                            >
+                                Accesorios
                             </Button>
                         </Link>
                     </NextLink>
