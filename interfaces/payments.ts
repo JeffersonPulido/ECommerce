@@ -13,4 +13,7 @@ export interface IPayments {
     updatedAt?: string;
     producto?: IProduct | string;
     vendorName?: string | '';
+    shippingStatus?: boolean;
+    transportationName?: string | '';
+    guideNumber?: string | '';
 }

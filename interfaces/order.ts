@@ -14,6 +14,7 @@ export interface IOrder {
     paidAt?: string;
     transactionId?: string;
     createdAt?: string;
+    payment?: any;
 }
 
 export interface IOrderItem {
@@ -24,16 +25,16 @@ export interface IOrderItem {
     slug: string;
     image: string;
     price: number;
-    gender: string
+    gender: string;
 }
 
 export interface ShippingAddress {
-    name: string,
-    lastName: string,
-    department: string,
-    city: string,
-    address: string,
-    neighborhood: string,
-    observation?: string,
-    phone: string,
+    name: string;
+    lastName: string;
+    department: string;
+    city: string;
+    address: string;
+    neighborhood: string;
+    observation?: string;
+    phone: string;
 }

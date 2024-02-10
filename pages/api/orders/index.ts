@@ -114,7 +114,6 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         //Añadir info a coleccion Payments
         orderItems.map(async (item) => {
             const newPayment = new MonthlyPayments({
-                status: false,
                 itemId: item._id,
                 item: item.title,
                 orderId: newOrder._id,

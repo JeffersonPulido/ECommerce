@@ -68,7 +68,7 @@ const updatePay = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         res.status(400).json({ message: "No existe orden de pago con ese ID" });
     }
 
-    const validStatus = ['true', 'false'];
+    const validStatus = ['En tramite', 'Consignado', 'Pendiente'];
 
     if (!validStatus.includes(status)) {
         res.status(400).json({

@@ -8,8 +8,11 @@ const paymentSchema = new Schema(
         itemId: { type: Schema.Types.ObjectId, ref: "Product", required: true },
         total: { type: Number, required: true },
         comission: { type: Number, required: true },
-        status: { type: Boolean, required: true, default: false },
-        quantityBuy: { type: Number, required: true }
+        status: { type: String, required: true, default: 'Pendiente' },
+        quantityBuy: { type: Number, required: true },
+        shippingStatus: { type: Boolean, default: false },
+        transportationName: { type: String, default: "" },
+        guideNumber: { type: String, default: "" },
     },
     {
         timestamps: true,

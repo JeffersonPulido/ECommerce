@@ -40,7 +40,10 @@ export const getPaymentByUser = async (
                 quantityBuy: payment.quantityBuy,
                 createdAt: payment.createdAt,
                 updatedAt: payment.updatedAt,
-                producto: matchingProducts
+                producto: matchingProducts,
+                shippingStatus: payment.shippingStatus,
+                transportationName: payment.transportationName,
+                guideNumber: payment.guideNumber,
             });
         }
     });
