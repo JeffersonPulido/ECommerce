@@ -24,24 +24,24 @@ const productSchema = new Schema(
             type: String,
             enum: {
                 values: [
-                    "ropa",
-                    "aseo",
-                    "variedad",
-                    "juguetes",
-                    "mobiliario",
-                    "accesorios",
+                    "Ropa",
+                    "Aseo",
+                    "Variedad",
+                    "Juguetes",
+                    "Mobiliario",
+                    "Accesorios",
                 ],
                 message: "{VALUE} no es un tipo válido",
             },
-            default: "variedad",
+            default: "Variedad",
         },
         gender: {
             type: String,
             enum: {
-                values: ["hombre", "mujer", "unisex"],
+                values: ["Hombre", "Mujer", "Unisex"],
                 message: "{VALUE} no es un genero válido",
             },
-            default: "unisex",
+            default: "Unisex",
         },
         status: {
             type: String,
