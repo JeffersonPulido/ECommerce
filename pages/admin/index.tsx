@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { SummaryTile } from '@/components/admin'
 import { AdminLayout } from '@/components/layouts'
-import { AccessAlarmOutlined, AccessTimeOutlined, AccountBalanceOutlined, AdminPanelSettingsOutlined, AssignmentInd, AttachMoneyOutlined, CancelPresentationOutlined, CategoryOutlined, CheckCircleOutline, CreditCardOffOutlined, DashboardOutlined, GroupOutlined, PaidOutlined, PendingActionsOutlined, ProductionQuantityLimitsOutlined, ReceiptLongOutlined, SavingsOutlined } from '@mui/icons-material'
+import { AccessAlarmOutlined, AccessTimeOutlined, AccountBalanceOutlined, AdminPanelSettingsOutlined, AlarmOutlined, AssignmentInd, AttachMoneyOutlined, CancelPresentationOutlined, CategoryOutlined, CheckCircleOutline, CreditCardOffOutlined, DashboardOutlined, GroupOutlined, PaidOutlined, PendingActionsOutlined, ProductionQuantityLimitsOutlined, ReceiptLongOutlined, SavingsOutlined, WarningAmberOutlined } from '@mui/icons-material'
 import { Box, Chip, Grid, Typography } from '@mui/material'
 import { DashboardSummaryResponse } from '@/interfaces';
 import { currency } from '@/utils';
@@ -48,10 +48,12 @@ const DashboardPage = () => {
         notPaidOrders,
         monthlyPaymentsPaid,
         monthlyPaymentsUnPaid,
+        monthlyPaymentsInProcess,
         comissionsPaid,
         comissionsUnPaid,
         monthlyPaymentsTotalPaid,
-        monthlyPaymentsTotalUnPaid
+        monthlyPaymentsTotalUnPaid,
+        monthlyPaymentsTotalInProcess
     } = data!
 
     return (
@@ -88,6 +90,8 @@ const DashboardPage = () => {
                 <SummaryTile title={currency.format(monthlyPaymentsTotalPaid)} subTitle={`Pagos a vendedores completados: ${monthlyPaymentsPaid}`} urlPage='/admin/payments' icon={<CheckCircleOutline color='success' sx={{ fontSize: 50 }} />} />
                 <SummaryTile title={currency.format(monthlyPaymentsTotalUnPaid)} subTitle={`Pagos a vendedores pendientes: ${monthlyPaymentsUnPaid}`} urlPage='/admin/payments' icon={<AccessAlarmOutlined color='warning' sx={{ fontSize: 50 }} />} />
                 <SummaryTile title={currency.format(comissionsPaid)} subTitle={`Comisiones recaudadas - Pendientes ${currency.format(comissionsUnPaid)}`} icon={<PaidOutlined color='success' sx={{ fontSize: 50 }} />} />
+
+                <SummaryTile title={currency.format(monthlyPaymentsTotalInProcess)} subTitle={`Pagos a vendedores en tramite: ${monthlyPaymentsInProcess}`} urlPage='/admin/payments' icon={<WarningAmberOutlined color='secondary' sx={{ fontSize: 50 }} />} />
 
             </Grid>
         </AdminLayout>

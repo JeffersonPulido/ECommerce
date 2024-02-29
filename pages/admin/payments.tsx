@@ -62,6 +62,18 @@ const PaymentsPage = () => {
         { field: "money", headerName: "Ganancia Neta", width: 120 },
         { field: "date", headerName: "Fecha venta", width: 200 },
         {
+            field: "orderStatusPay",
+            headerName: "Estado pago orden",
+            renderCell: ({ row }: GridRenderCellParams) => {
+                return row.orderStatusPay ? (
+                    <Chip variant="outlined" label="Pagada" color="success" />
+                ) : (
+                    <Chip variant="outlined" label="Pendiente" color="error" />
+                );
+            },
+            width: 200,
+        },
+        {
             field: "status",
             headerName: "Estado de pago",
             width: 250,
@@ -94,6 +106,7 @@ const PaymentsPage = () => {
         date: moment(product.createdAt).format("DD / MMM / YYYY, h:mm:ss a"),
         status: product.status,
         vendorName: product.vendorName,
+        orderStatusPay: product.orderPayStatus,
     }));
 
     return (

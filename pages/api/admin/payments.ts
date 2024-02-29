@@ -1,6 +1,6 @@
 import { db } from "@/database";
 import { IPayments } from "@/interfaces";
-import { MonthlyPayments } from "@/models";
+import { MonthlyPayments, Order } from "@/models";
 import { isValidObjectId } from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -31,33 +31,38 @@ const getPayments = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
                 foreignField: "_id",
                 as: "producto",
             },
-        }
+        },
     ]).sort({ createdAt: "desc" });
 
     const dataCompleted: IPayments[] = [];
 
-    data.forEach(async (payment) => {
-        payment.producto.forEach(async (product: { name: any }) => {
-            const productName = product.name;
+    const promises = data.map(async (payment) => {
+        await Promise.all(
+            payment.producto.map(async (product: { name: any }) => {
 
-            dataCompleted.push({
-                _id: payment._id,
-                item: payment.item,
-                orderId: payment.orderId,
-                itemId: payment.itemId,
-                total: payment.total,
-                comission: payment.comission,
-                status: payment.status,
-                quantityBuy: payment.quantityBuy,
-                createdAt: payment.createdAt,
-                updatedAt: payment.updatedAt,
-                vendorName: productName,
-            });
-        });
+                const order = await Order.findOne({ _id: payment.orderId });
+
+                dataCompleted.push({
+                    _id: payment._id,
+                    item: payment.item,
+                    orderId: payment.orderId,
+                    itemId: payment.itemId,
+                    total: payment.total,
+                    comission: payment.comission,
+                    status: payment.status,
+                    quantityBuy: payment.quantityBuy,
+                    createdAt: payment.createdAt,
+                    updatedAt: payment.updatedAt,
+                    vendorName: product.name,
+                    orderPayStatus: order!.isPaid,
+                });
+            })
+        );
     });
 
-    await db.disconnect();
+    await Promise.all(promises);
 
+    await db.disconnect();
     return res.status(200).json(dataCompleted);
 };
 
@@ -68,7 +73,7 @@ const updatePay = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         res.status(400).json({ message: "No existe orden de pago con ese ID" });
     }
 
-    const validStatus = ['En tramite', 'Consignado', 'Pendiente'];
+    const validStatus = ["En tramite", "Consignado", "Pendiente"];
 
     if (!validStatus.includes(status)) {
         res.status(400).json({

@@ -14,8 +14,11 @@ export interface DashboardSummaryResponse {
     notPaidOrders: number;
     monthlyPaymentsPaid: number;
     monthlyPaymentsUnPaid: number;
+    monthlyPaymentsInProcess: number;
     comissionsPaid: number;
     comissionsUnPaid: number,
+    comissionsInProcess: number,
     monthlyPaymentsTotalPaid: number,
     monthlyPaymentsTotalUnPaid: number,
+    monthlyPaymentsTotalInProcess: number,
 }
