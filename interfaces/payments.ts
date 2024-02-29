@@ -4,7 +4,7 @@ export interface IPayments {
     _id: string;
     item: IProduct;
     orderId: IOrder | string;
-    orderPayStatus: boolean;
+    orderPayStatus?: boolean;
     itemId: IProduct | string;
     total: number;
     comission: number;
