@@ -55,12 +55,12 @@ a{
 
 .btn-menu{
   background-color: #232323 !important;
-  color: #f3f3f3;
-  font-weight: 700;
+  color: #f3f3f3 !important;
+  font-weight: 700 !important;
 }
 
 .btn-menu:hover {
   background-color: #f3f3f3 !important;
-  color: #232323;
-  border-color: #f3f3f3;
+  color: #232323 !important;
+  border-color: #f3f3f3 !important;
 }
