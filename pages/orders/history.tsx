@@ -101,7 +101,7 @@ const HistoryPage: NextPage<Props> = ({ orders }) => {
                     <Select
                         value={row.isSatisfying}
                         label="Estado de recibido"
-                        disabled={!row.shippingStatus}
+                        disabled={!row.shippingStatus || row.isSatisfying === 'Satisfecho'}
                         sx={{ width: "100%" }}
                         onChange={({ target }) =>
                             onUpdateField(row.id, target.value)
