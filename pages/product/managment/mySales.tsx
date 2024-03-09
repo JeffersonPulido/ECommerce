@@ -207,7 +207,7 @@ const MySales = () => {
                 variant="h1"
                 component="h1"
             >{`Mis Ventas (${productList.length})`}</Typography>
-            <Grid container className="fadeIn">
+            <Grid container className="fadeIn" sx={{ mt: 2 }}>
                 <Grid item xs={12} sx={{ height: 650, width: "100%" }}>
                     <DataGrid rows={rows} columns={columns} />
                 </Grid>

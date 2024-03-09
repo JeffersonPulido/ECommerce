@@ -1,6 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { isValidObjectId } from "mongoose";
 import mercadopago from "mercadopago";
 import { CreatePreferencePayload } from "mercadopago/models/preferences/create-payload.model";
+import { db } from "@/database";
+import { IOrder } from "@/interfaces";
+import { Order } from "@/models";
+
+type Data = { message: string } | IOrder[];
 
 mercadopago.configure({
     access_token: process.env.NEXT_MP_ACCESS_TOKEN!,
@@ -10,6 +16,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
         case "POST":
             return payOrder(req, res);
+        case "PUT":
+            return updateStateSatisfying(req, res);
         default:
             res.status(400).json({ message: "Bad request" });
     }
@@ -41,4 +49,37 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse) => {
     } catch (error) {
         res.status(400).json({ message: "Bad request" });
     }
+};
+
+const updateStateSatisfying = async (
+    req: NextApiRequest,
+    res: NextApiResponse<Data>
+) => {
+    const { orderId = "", isSatisfying = "" } = req.body;
+
+    if (!isValidObjectId(orderId)) {
+        res.status(400).json({ message: "No existe orden con ese ID" });
+    }
+
+    const validStatus = ["Inconforme", "Satisfecho", "Pendiente"];
+
+    if (!validStatus.includes(isSatisfying)) {
+        res.status(400).json({
+            message: "Estado no permitido: " + validStatus.join(", "),
+        });
+    }
+
+    await db.connect();
+
+    const orden = await Order.findById(orderId);
+
+    if (!orden) {
+        await db.disconnect();
+        res.status(404).json({ message: "Orden no encontrada" });
+    }
+
+    orden!.isSatisfying = isSatisfying;
+    await orden!.save();
+    await db.disconnect();
+    return res.status(200).json({ message: "Orden actualizado" });
 };

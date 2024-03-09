@@ -15,6 +15,7 @@ export interface IOrder {
     transactionId?: string;
     createdAt?: string;
     payment?: any;
+    isSatisfying?: boolean;
 }
 
 export interface IOrderItem {

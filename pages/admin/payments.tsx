@@ -1,6 +1,6 @@
 import { shopApi } from "@/axiosApi";
 import { AdminLayout } from "@/components/layouts";
-import { IPayments, IUser } from "@/interfaces";
+import { IPayments } from "@/interfaces";
 import { currency } from "@/utils";
 import { PeopleOutline } from "@mui/icons-material";
 import { Chip, Grid, MenuItem, Select } from "@mui/material";
@@ -115,7 +115,7 @@ const PaymentsPage = () => {
             subTitle={"Modulo de pagos a vendedores"}
             icon={<PeopleOutline />}
         >
-            <Grid container className="fadeIn">
+            <Grid container className="fadeIn" sx={{ mt: 2 }}>
                 <Grid item xs={12} sx={{ height: 650, width: "100%" }}>
                     <DataGrid rows={rows} columns={columns} />
                 </Grid>

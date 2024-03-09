@@ -120,7 +120,7 @@ export const SideMenu = () => {
                                 <ListItemIcon>
                                     <ConfirmationNumberOutlined />
                                 </ListItemIcon>
-                                <ListItemText primary={"Mis Ordenes"} />
+                                <ListItemText primary={"Mis Compras"} />
                             </ListItem>
                             {/** Products - ONLY IS LOGGED VENDOR ROLE */}
                             {(user?.role === "vendor" ||
