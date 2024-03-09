@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { GetServerSideProps, NextPage } from "next";
+import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import moment from "moment";
 import {
-    Button,
     Chip,
     Grid,
     IconButton,
@@ -11,36 +10,36 @@ import {
     MenuItem,
     OutlinedInput,
     Select,
-    TextField,
     Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { ShopLayout } from "@/components/layouts";
 import { IPayments } from "@/interfaces";
 import { currency } from "@/utils";
-import { dbPayments } from "@/database";
 import { shopApi } from "@/axiosApi";
 import { Save } from "@mui/icons-material";
+import useSWR from "swr";
 
-interface Props {
-    products: IPayments[];
-}
-
-const MySales: NextPage<Props> = ({ products }) => {
+const MySales = () => {
+    const { data, error } = useSWR<IPayments[]>("/api/orders/sell");
     const [productList, setProductList] = useState<IPayments[]>([]);
     const [guideNumberText, setGuideNumberText] = useState("");
 
     useEffect(() => {
-        setProductList(products);
-    }, [products]);
+        if (data) {
+            setProductList(data);
+        }
+    }, [data]);
+
+    if (!data && !error) return <></>;
 
     const onUpdateField = async (
         productId: string,
         newValue: boolean | string,
-        fieldToUpdate: "shippingStatus" | "transportationName"
+        fieldToUpdate: "shippingStatus" | "transportationName" | "guideNumber"
     ) => {
-        const previusProduct = products.map((product) => ({ ...product }));
-        const updatedProduct = products.map((product) => ({
+        const previusProduct = productList.map((product) => ({ ...product }));
+        const updatedProduct = productList.map((product) => ({
             ...product,
             [fieldToUpdate]:
                 productId === product._id ? newValue : product[fieldToUpdate],
@@ -52,7 +51,6 @@ const MySales: NextPage<Props> = ({ products }) => {
                 [fieldToUpdate]: newValue,
             };
             await shopApi.put("/orders/sell/", requestBody);
-            window.location.reload();
         } catch (error) {
             setProductList(previusProduct);
             if (fieldToUpdate === "shippingStatus") {
@@ -62,32 +60,6 @@ const MySales: NextPage<Props> = ({ products }) => {
                     "No se pudo actualizar la empresa transportadora de envío"
                 );
             }
-        }
-    };
-
-    const onUpdateFieldGuide = async (
-        e: any,
-        productId: string,
-        newValue: string
-    ) => {
-        e.preventDefault();
-        const previusProduct = products.map((product) => ({ ...product }));
-        const updatedProduct = products.map((product) => ({
-            ...product,
-            guideNumber:
-                productId === product._id ? newValue : product.guideNumber,
-        }));
-        setProductList(updatedProduct);
-
-        try {
-            await shopApi.put("/orders/sell/", {
-                productId,
-                guideNumber: newValue,
-            });
-            window.location.reload();
-        } catch (error) {
-            setProductList(previusProduct);
-            alert("No se pudo actualizar la guia de envío");
         }
     };
 
@@ -159,7 +131,9 @@ const MySales: NextPage<Props> = ({ products }) => {
                 return (
                     <OutlinedInput
                         disabled={!row.transportationName}
-                        value={row.guideNumber}
+                        value={
+                            row.guideNumber ? row.guideNumber : guideNumberText
+                        }
                         type="text"
                         onChange={(e) => {
                             setGuideNumberText(e.target.value);
@@ -169,10 +143,10 @@ const MySales: NextPage<Props> = ({ products }) => {
                                 <IconButton
                                     disabled={!row.transportationName}
                                     onClick={(e) =>
-                                        onUpdateFieldGuide(
-                                            e,
+                                        onUpdateField(
                                             row.id,
-                                            guideNumberText
+                                            guideNumberText,
+                                            "guideNumber"
                                         )
                                     }
                                     edge="end"
@@ -226,13 +200,13 @@ const MySales: NextPage<Props> = ({ products }) => {
 
     return (
         <ShopLayout
-            title={`Mis ventas (${products.length})`}
+            title={`Mis ventas (${productList.length})`}
             pageDescription={"Pagina de ventas realizadas por el usuario"}
         >
             <Typography
                 variant="h1"
                 component="h1"
-            >{`Mis Ventas (${products.length})`}</Typography>
+            >{`Mis Ventas (${productList.length})`}</Typography>
             <Grid container className="fadeIn">
                 <Grid item xs={12} sx={{ height: 650, width: "100%" }}>
                     <DataGrid rows={rows} columns={columns} />
@@ -242,10 +216,7 @@ const MySales: NextPage<Props> = ({ products }) => {
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({
-    req,
-    query,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
     const session: any = await getSession({ req });
     if (!session) {
         return {
@@ -255,12 +226,9 @@ export const getServerSideProps: GetServerSideProps = async ({
             },
         };
     }
-    const products = await dbPayments.getPaymentByUser(session.user._id);
 
     return {
-        props: {
-            products,
-        },
+        props: {},
     };
 };
 
