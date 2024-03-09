@@ -14,6 +14,10 @@ export interface IPayments {
     updatedAt?: string;
     producto?: IProduct | string;
     vendorName?: string | "";
+    vendorEmail?: string | "";
+    vendorBank?: string | "";
+    vendorTypeAccount?: string | "";
+    vendorNumberAccount?: number | "";
     shippingStatus?: boolean;
     transportationName?: string | "";
     guideNumber?: string | "";

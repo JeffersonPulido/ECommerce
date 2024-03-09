@@ -1,6 +1,6 @@
 import { db } from "@/database";
 import { IPayments } from "@/interfaces";
-import { MonthlyPayments, Order } from "@/models";
+import { MonthlyPayments, Order, User } from "@/models";
 import { isValidObjectId } from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 
@@ -39,8 +39,8 @@ const getPayments = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const promises = data.map(async (payment) => {
         await Promise.all(
             payment.producto.map(async (product: { name: any }) => {
-
                 const order = await Order.findOne({ _id: payment.orderId });
+                const user = await User.findOne({ _id: product.name }); 
 
                 dataCompleted.push({
                     _id: payment._id,
@@ -53,9 +53,14 @@ const getPayments = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
                     quantityBuy: payment.quantityBuy,
                     createdAt: payment.createdAt,
                     updatedAt: payment.updatedAt,
-                    vendorName: product.name,
+                    vendorName: user?.name,
+                    vendorEmail: user?.email,
+                    vendorBank: user?.bank,
+                    vendorTypeAccount: user?.typeAccount,
+                    vendorNumberAccount: user?.numberAccount,
                     orderPayStatus: order!.isPaid,
                 });
+
             })
         );
     });

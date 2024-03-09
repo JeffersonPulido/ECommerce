@@ -55,12 +55,21 @@ const PaymentsPage = () => {
             },
             width: 210,
         },
+        { field: "vendorEmail", headerName: "Email", width: 210 },
+        { field: "vendorBank", headerName: "Banco", width: 210 },
+        { field: "vendorTypeAccount", headerName: "Tipo Cuenta", width: 210 },
+        {
+            field: "vendorNumberAccount",
+            headerName: "Numero Cuenta",
+            width: 210,
+        },
+
         { field: "title", headerName: "Producto", width: 350 },
         { field: "quantity", headerName: "Cantidad", width: 100 },
         { field: "price", headerName: "Precio de venta", width: 120 },
         { field: "comission", headerName: "Comision", width: 100 },
         { field: "money", headerName: "Ganancia Neta", width: 120 },
-        { field: "date", headerName: "Fecha venta", width: 200 },
+        { field: "date", headerName: "Fecha venta", width: 210 },
         {
             field: "orderStatusPay",
             headerName: "Estado pago orden",
@@ -106,6 +115,10 @@ const PaymentsPage = () => {
         date: moment(product.createdAt).format("DD / MMM / YYYY, h:mm:ss a"),
         status: product.status,
         vendorName: product.vendorName,
+        vendorEmail: product.vendorEmail,
+        vendorBank: product.vendorBank,
+        vendorTypeAccount: product.vendorTypeAccount,
+        vendorNumberAccount: product.vendorNumberAccount,
         orderStatusPay: product.orderPayStatus,
     }));
 

@@ -206,7 +206,7 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
                                     disabled={password === "@" ? true : false}
                                 />
                             </Grid>
-                            {role === "vendor" && (
+                            {role === "vendor" || role === 'admin' && (
                                 <>
                                     <Divider />
                                     <ListSubheader sx={{ mb: -2 }}>
@@ -305,7 +305,7 @@ const ProfilePage: NextPage<Props> = ({ user }) => {
                                             icon={<CheckOutlined />}
                                         />
                                     </Grid>
-                                ) : password === "@" && role !== "vendor" ? (
+                                ) : password === "@" && role !== "vendor" && role !== 'admin' ? (
                                     <Grid
                                         item
                                         xs={12}
